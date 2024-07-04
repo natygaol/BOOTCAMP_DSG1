@@ -63,13 +63,13 @@ while(opcion < 5):
             print("NO SE ENCONTRO EL EMPRESA SOLICITADO")
         else:
             print(f' EMPRESA A ACTUALIZAR : {lista_empresas[posicion_busqueda].get("razonSocial")}')
-            nuevo_nombre = input("RUC : ")
-            nuevo_email = input("RAZON SOCIAL : ")
-            nuevo_celular = input("DIRECCION : ")
+            nuevo_ruc = input("RUC : ")
+            nueva_rs = input("RAZON SOCIAL : ")
+            nueva_direccion = input("DIRECCION : ")
             dic_actualizar_empresa = {
-                'ruc':ruc,
-                'razonSocial':razonSocial,
-                'direccion':direccion
+                'ruc': nuevo_ruc,
+                'razonSocial': nueva_rs,
+                'direccion': nueva_direccion
             }
             lista_empresas[posicion_busqueda] = dic_actualizar_empresa
         print("EMPRESA ACTUALIZADO CON EXITO...")

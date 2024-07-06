@@ -3,13 +3,11 @@ import tabulate
 import time
 from librerias.lib_alumnos import *
 
-lista_alumnos = [
-    {
-        'nombre':'César Mayta',
-        'email':'cesar@gmail.com',
-        'celular':'898989898'
-    }
-]
+f = open('alumnos.txt','r')
+str_alumnos = f.read()
+f.close()
+
+lista_alumnos = cargar_datos(str_alumnos)
 ANCHO = 50
 opcion = 0
 
@@ -60,7 +58,7 @@ while(opcion < 5):
                 'celular':nuevo_celular
             }
             lista_alumnos[posicion_busqueda] = dic_actualizar_alumno
-        print("ALUMNO ACTUALIZADO CON EXITO...")
+            print("ALUMNO ACTUALIZADO CON EXITO...")
     elif(opcion == 4):
         print("="*ANCHO)
         print(" " * 10 + "[4] ELIMINAR ALUMNO")
@@ -75,6 +73,10 @@ while(opcion < 5):
     elif(opcion == 5):
         print("="*ANCHO)
         print(" " * 10 + "[5] SALIR")
+        str_alumnos = grabar_datos(lista_alumnos)
+        fsalida = open('alumnos.txt','w')
+        fsalida.write(str_alumnos)
+        fsalida.close()
         print("="*ANCHO)
     else:
         print("="*ANCHO)

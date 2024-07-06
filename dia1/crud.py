@@ -2,6 +2,9 @@ import os
 import tabulate
 import time
 from librerias.lib_alumnos import *
+# another way to import if we want to be more specific
+# from librerias.lib_alumnos import buscar_alumno,mostrar_menu,cargar_datos,grabar_datos
+
 
 f = open('alumnos.txt','r')
 str_alumnos = f.read()

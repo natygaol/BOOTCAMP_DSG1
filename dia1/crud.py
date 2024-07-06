@@ -11,11 +11,11 @@ lista_alumnos = [
 ]
 ANCHO = 50
 opcion = 0
-while(opcion < 5):
-    os.system("clear")
-    print("="*ANCHO)
+
+def mostrar_menu(ancho):
+    print("="*ancho)
     print(" " * 10 + "CRUD DE ALUMNOS")
-    print("="*ANCHO)
+    print("="*ancho)
     print("""
          [1] REGISTRAR ALUMNO
          [2] MOSTRAR ALUMOS
@@ -23,7 +23,21 @@ while(opcion < 5):
          [4] ELIMINAR ALUMNO
          [5] SALIR
           """)
-    print("="*ANCHO)
+    print("="*ancho)
+
+def buscar_alumno(valor_busqueda,listado):
+    posicion_busqueda = -1
+    for posicion in range(len(lista_alumnos)):
+        dic_alumno = lista_alumnos[posicion]
+        if valor_busqueda in dic_alumno.values():
+            posicion_busqueda = posicion
+            break
+    return posicion_busqueda
+
+
+while(opcion < 5):
+    os.system("clear")
+    mostrar_menu(ANCHO)
     opcion = int(input("INGRESE OPCION : "))
     os.system("clear")
     if(opcion == 1):
@@ -53,12 +67,7 @@ while(opcion < 5):
         print(" " * 10 + "[3] ACTUALIZAR ALUMNO")
         print("="*ANCHO)
         valor_busqueda = input('INGRESE EMAIL DEL ALUMNO A ACTUALIZAR :')
-        posicion_busqueda = -1
-        for posicion in range(len(lista_alumnos)):
-            dic_alumno = lista_alumnos[posicion]
-            if valor_busqueda in dic_alumno.values():
-                posicion_busqueda = posicion
-                break
+        posicion_busqueda = buscar_alumno(valor_busqueda,lista_alumnos)
         if posicion_busqueda == -1:
             print("NO SE ENCONTRO EL ALUMNO SOLICITADO")
         else:
@@ -78,12 +87,7 @@ while(opcion < 5):
         print(" " * 10 + "[4] ELIMINAR ALUMNO")
         print("="*ANCHO)
         valor_busqueda = input('INGRESE EMAIL DEL ALUMNO A ELIMINAR :')
-        posicion_busqueda = -1
-        for posicion in range(len(lista_alumnos)):
-            dic_alumno = lista_alumnos[posicion]
-            if valor_busqueda in dic_alumno.values():
-                posicion_busqueda = posicion
-                break
+        posicion_busqueda = buscar_alumno(valor_busqueda,lista_alumnos)
         if posicion_busqueda == -1:
             print("NO SE ENCONTRO EL ALUMNO SOLICITADO")
         else:

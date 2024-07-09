@@ -7,7 +7,11 @@ class Automovil:
 
   def encender(self):
     print('encender ' + self.marca)
+    
+  def apagar(self):
+    print('apagar '+ self.marca)
 
 #objetos
 vw = Automovil(1970, 'CH1234', 'Amarillo', 'Volkswagen')
 vw.encender()
+vw.apagar()

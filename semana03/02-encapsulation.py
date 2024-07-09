@@ -1,4 +1,6 @@
 class User:
+  
+  #atributos son privados con __
   __email = 'naty@gmail.com'  
   __password = '278278'
   

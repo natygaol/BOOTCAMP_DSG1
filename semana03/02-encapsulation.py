@@ -5,6 +5,7 @@ class User:
   __password = '278278'
   
   def __init__(self):
+    #cuando no requiero declarar los atributos, se coloca pass
     pass
   
   def login(self, email, password):

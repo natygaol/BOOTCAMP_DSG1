@@ -69,7 +69,7 @@ class EmpresaViews:
         print("=" * self.ANCHO)
         empresas = self.dao.mostrar_empresas()
         cabeceras = ["RUC","RAZON SOCIAL","DIRECCION"]
-        data = [[empresa.nombre,empresa.email,empresa.celular] for empresa in empresas]
+        data = [[empresa.ruc,empresa.rs,empresa.direccion] for empresa in empresas]
         print(tabulate.tabulate(data,headers=cabeceras,tablefmt="grid"))
         input("presione ENTER para continuar...")
 

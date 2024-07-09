@@ -9,5 +9,5 @@ from Views.empresa_views import EmpresaViews
 
 #si estoy en el archivo principal
 if __name__ == "__main__":
-  alumno_view = EmpresaViews()
-  alumno_view.menu()
+  empresa_view = EmpresaViews()
+  empresa_view.menu()

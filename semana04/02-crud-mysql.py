@@ -1,6 +1,7 @@
 import os
 import tabulate
 import time
+import mysql.connector
 
 lista_alumnos = []
 ANCHO = 50
@@ -18,6 +19,27 @@ def mostrar_menu(ancho):
          [5] SALIR
           """)
     print("="*ancho)
+
+######################## base de datos ##########
+
+def conectar_bd():
+  return mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='root',
+    database='db_codigo'
+  )
+
+def consultar_alumnos():
+    conexion = conectar_bd()
+    cursor = conexion.cursor(dictionary=True)
+    query = "select id,nombre,email,celular from tbl_alumno"
+    cursor.execute(query)
+    alumnos = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return alumnos
+
 
 def buscar_alumno(valor_busqueda,lista_alumnos):
     posicion_busqueda = -1
@@ -51,7 +73,8 @@ while(opcion < 5):
         print("="*ANCHO)
         print(" " * 10 + "[2] MOSTRAR ALUMNOS")
         print("="*ANCHO)
-        cabeceras = ["NOMBRE","EMAIL","CELULAR"]
+        cabeceras = ["ID","NOMBRE","EMAIL","CELULAR"]
+        lista_alumnos = consultar_alumnos()
         tabla = [alumno.values() for alumno in lista_alumnos]
         print(tabulate.tabulate(tabla,headers=cabeceras,tablefmt="grid"))
         input("presione ENTER para continuar...")

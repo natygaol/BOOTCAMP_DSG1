@@ -7,6 +7,8 @@ lista_alumnos = []
 ANCHO = 50
 opcion = 0
 
+
+
 def mostrar_menu(ancho):
     print("="*ancho)
     print(" " * 10 + "CRUD DE ALUMNOS")
@@ -20,15 +22,15 @@ def mostrar_menu(ancho):
           """)
     print("="*ancho)
 
-######################## base de datos ##########
 
+############### BASE DE DATOS ############
 def conectar_bd():
-  return mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='root',
-    database='db_codigo'
-  )
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        database='db_codigo'
+    )
 
 def consultar_alumnos():
     conexion = conectar_bd()
@@ -49,14 +51,34 @@ def insertar_alumno(nombre,email,celular):
     cursor.close()
     conexion.close()
 
-def buscar_alumno(valor_busqueda,lista_alumnos):
-    posicion_busqueda = -1
-    for posicion in range(len(lista_alumnos)):
-        dic_alumno = lista_alumnos[posicion]
-        if valor_busqueda in dic_alumno.values():
-            posicion_busqueda = posicion
-            break
-    return posicion_busqueda
+
+def buscar_alumno(valor_busqueda):
+    conexion = conectar_bd()
+    cursor = conexion.cursor(dictionary=True)
+    query = "select * from tbl_alumno where email = %s"
+    cursor.execute(query,(valor_busqueda,))
+    alumno = cursor.fetchone()
+    cursor.close()
+    conexion.close()
+    return alumno
+
+def actualizar_alumno(id,nombre,email,celular):
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    query = "UPDATE tbl_alumno SET nombre = %s,email = %s, celular = %s where id=%s"
+    cursor.execute(query,(nombre,email,celular,id))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+
+def eliminar_alumno(id):
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    query = 'DELETE FROM tbl_alumno WHERE id = %s'
+    cursor.execute(query,(id,))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 
 while(opcion < 5):
     os.system("clear")
@@ -70,7 +92,7 @@ while(opcion < 5):
         nombre = input("NOMBRE : ")
         email = input("EMAIL : ")
         celular = input("CELULAR : ")
-        insertar_alumno(nombre, email, celular)
+        insertar_alumno(nombre,email,celular)
         print(" ALUMNO REGISTRADO CON EXITO")
     elif(opcion == 2):
         print("="*ANCHO)
@@ -86,31 +108,26 @@ while(opcion < 5):
         print(" " * 10 + "[3] ACTUALIZAR ALUMNO")
         print("="*ANCHO)
         valor_busqueda = input('INGRESE EMAIL DEL ALUMNO A ACTUALIZAR :')
-        posicion_busqueda = buscar_alumno(valor_busqueda,lista_alumnos)
-        if posicion_busqueda == -1:
+        alumno = buscar_alumno(valor_busqueda)
+        if not alumno:
             print("NO SE ENCONTRO EL ALUMNO SOLICITADO")
         else:
-            print(f' ALUMNO A ACTUALIZAR : {lista_alumnos[posicion_busqueda].get("nombre")}')
+            print(f" ALUMNO A ACTUALIZAR : {alumno['nombre']}")
             nuevo_nombre = input("NOMBRE : ")
             nuevo_email = input("EMAIL : ")
             nuevo_celular = input("CELULAR : ")
-            dic_actualizar_alumno = {
-                'nombre':nuevo_nombre,
-                'email':nuevo_email,
-                'celular':nuevo_celular
-            }
-            lista_alumnos[posicion_busqueda] = dic_actualizar_alumno
+            actualizar_alumno(alumno['Id'],nuevo_nombre,nuevo_email,nuevo_celular)
             print("ALUMNO ACTUALIZADO CON EXITO...")
     elif(opcion == 4):
         print("="*ANCHO)
         print(" " * 10 + "[4] ELIMINAR ALUMNO")
         print("="*ANCHO)
         valor_busqueda = input('INGRESE EMAIL DEL ALUMNO A ELIMINAR :')
-        posicion_busqueda = buscar_alumno(valor_busqueda,lista_alumnos)
-        if posicion_busqueda == -1:
+        alumno = buscar_alumno(valor_busqueda)
+        if not alumno:
             print("NO SE ENCONTRO EL ALUMNO SOLICITADO")
         else:
-            lista_alumnos.pop(posicion_busqueda)
+            eliminar_alumno(alumno['Id'])
             print('ALUMNO ELIMINADO!!!')
     elif(opcion == 5):
         print("="*ANCHO)

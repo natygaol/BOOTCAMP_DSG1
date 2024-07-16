@@ -40,6 +40,14 @@ def consultar_alumnos():
     conexion.close()
     return alumnos
 
+def insertar_alumno(nombre,email,celular):
+    conexion = conectar_bd()
+    cursor = conexion.cursor()
+    query = "insert into tbl_alumno(nombre,email,celular) values (%s,%s,%s)"
+    cursor.execute(query,(nombre,email,celular))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 
 def buscar_alumno(valor_busqueda,lista_alumnos):
     posicion_busqueda = -1
@@ -62,12 +70,7 @@ while(opcion < 5):
         nombre = input("NOMBRE : ")
         email = input("EMAIL : ")
         celular = input("CELULAR : ")
-        dic_nuevo_alumno = {
-            'nombre':nombre,
-            'email':email,
-            'celular':celular
-        }
-        lista_alumnos.append(dic_nuevo_alumno)
+        insertar_alumno(nombre, email, celular)
         print(" ALUMNO REGISTRADO CON EXITO")
     elif(opcion == 2):
         print("="*ANCHO)

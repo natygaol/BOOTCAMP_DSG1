@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-# import mysql.connector
+import mysql.connector
 
 LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?geoId=102927786&keywords="
 
@@ -36,13 +36,52 @@ def get_offers(skill):
             print(f'empresa : {company}')
             print(f'url:{offer_url}')
             print(f'fecha : {offer_date_value}')"""
-            offer_list.append((title,location,company,date_value,url_value))
+            offer_list.append((title,location,company,date_value,url_value,skill))
             
         return offer_list
     else:
         print(f"error : {url.status_code}")
 
+def save_offert_to_db(offers):
+    try:
+        conn = mysql.connector.connect(
+            user='root',
+            password='root',
+            host='localhost',
+            database='db_codigo'
+        )
+        cursor = conn.cursor()
+
+        query_table = """
+        create table if not exists tbl_oferta(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        titulo VARCHAR(255),
+        ubicacion VARCHAR(255),
+        empresa VARCHAR(255),
+        fecha DATE,
+        url TEXT,
+        skill VARCHAR(255)
+        )
+        """
+        cursor.execute(query_table)
+        conn.commit()
+
+        query_insert = """
+        insert into tbl_oferta(titulo,ubicacion,empresa,fecha,url,skill)
+        values(%s,%s,%s,%s,%s,%s)
+        """
+
+        for offer in offers:
+            cursor.execute(query_insert,offer)
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("datos guardados en bd...")
+    except mysql.connector.Error as err:
+        print(err)
+
 if __name__ == '__main__':
     skill = input('ingrese skill a buscar : ')
     offer_list = get_offers(skill)
-    print(offer_list)
+    save_offert_to_db(offer_list)

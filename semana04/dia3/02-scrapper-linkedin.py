@@ -8,9 +8,23 @@ def get_offers(skill):
 
     if(url.status_code == 200):
         html = BeautifulSoup(url.text,'html.parser')
-        offers_title = html.find_all('h3',{'class':'base-search-card__title'})
-        for title in offers_title:
-            print(title.get_text())
+        #with open('linkedin.html','w',encoding='utf-8') as file:
+        #    file.write(url.text)
+        #print(html)
+
+        ul_offers = html.find('ul',{'class':'jobs-search__results-list'})
+        li_offers = ul_offers.find_all('li')
+        #print(li_offers)
+        
+        for offer in li_offers:
+            offer_title = offer.find('h3',{'class':'base-search-card__title'})
+            offer_location = offer.find('span',{'class':'job-search-card__location'})
+            offer_company = offer.find('a')
+            offer_url = offer_company['href']
+            print(f'titulo : {offer_title.get_text().strip()}')
+            print(f'ubicacion : {offer_location.get_text().strip()}')
+            print(f'empresa : {offer_company.get_text().strip()}')
+            print(f'url:{offer_url}')
     else:
         print(f"error : {url.status_code}")
 

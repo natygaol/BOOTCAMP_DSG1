@@ -8,8 +8,6 @@ def get_offers(skill):
 
     if(url.status_code == 200):
         html = BeautifulSoup(url.text,'html.parser')
-        #print(html)
-        offers = html.find('div',{'class':'base-search-card__info'})
         offers_title = html.find_all('h3',{'class':'base-search-card__title'})
         for title in offers_title:
             print(title.get_text())

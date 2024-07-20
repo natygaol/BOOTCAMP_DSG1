@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import mysql.connector
+# import mysql.connector
 
 LINKEDIN_URL = "https://www.linkedin.com/jobs/search/?geoId=102927786&keywords="
 
@@ -22,11 +22,14 @@ def get_offers(skill):
             offer_url = offer.find('a')['href'].strip()
             offer_company = offer.find('a',{'class':'hidden-nested-link'})
             company = offer_company.get_text().strip() if offer_company else 'N/A'
+            offer_date = offer.find('time',{'class':'job-search-card__listdate'})
+            offer_date_value = offer_date['datetime'].strip() if offer_date else None
 
             print(f'titulo : {offer_title.get_text().strip()}')
             print(f'ubicacion : {offer_location.get_text().strip()}')
             print(f'empresa : {company}')
             print(f'url:{offer_url}')
+            print(f'fecha : {offer_date_value}')
     else:
         print(f"error : {url.status_code}")
 

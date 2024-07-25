@@ -1,1 +1,5 @@
 requests
+prefect
+python-decouple
+bs4
+mysql-connector-python

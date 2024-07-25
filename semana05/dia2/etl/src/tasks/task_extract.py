@@ -2,7 +2,6 @@ import requests
 from prefect import task
 from config import Config
 import csv
-import mysql.connector
 
 config = Config()
 
@@ -18,23 +17,39 @@ def task_extract_csv(file_csv):
     return lista_csv
 
 @task(name="Extraer info de dni")
-def task_extract_dni(tupla_alumno):
-    dni = tupla_alumno[0]
-    celular = tupla_alumno[1]
+def task_extract_dni(lista_alumnos):
+    lista_alumnos_completa = []
+    for tupla_alumno in lista_alumnos:
+        dni = tupla_alumno[0]
+        celular = tupla_alumno[1]
 
-    data_request = {
-        "dni": dni 
-    }
+        print("DNI :",dni)
 
-    headers_request = {
-        "Authorization": "Bearer " + config.api_token,
-        "Content-Type": "application/json"
-    }
-    response = requests.post(config.api_url_dni,
-                             json=data_request,
-                             headers=headers_request)
-    
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"error {response.status_code}")
+        data_request = {
+            "dni": dni 
+        }
+
+        headers_request = {
+            "Authorization": "Bearer " + config.api_token,
+            "Content-Type": "application/json"
+        }
+        response = requests.post(config.api_url_dni,
+                                json=data_request,
+                                headers=headers_request)
+        
+        if response.status_code == 200:
+            response_alumnos = response.json()
+            if response_alumnos['success'] == True:
+                #print(data_alumnos)
+                data_alumnos = response_alumnos['data']
+                tupla_alumno_completo = (data_alumnos['numero'],
+                                    data_alumnos['nombres'],
+                                    data_alumnos['apellido_paterno'] + ' ' + data_alumnos['apellido_materno'],
+                                    celular)
+                lista_alumnos_completa.append(tupla_alumno_completo)
+            else:
+                print("ERROR AL CONECTARSE AL API : ",response_alumnos['message'])
+        else:
+            print(f"error : {response.status_code}")
+
+    return lista_alumnos_completa
